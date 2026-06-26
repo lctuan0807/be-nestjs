@@ -7,11 +7,10 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-
   // register user endpoint -- auth/register
   @Post('register')
   async register(@Body() register: RegisterDto): Promise<{ message: string, data: RegisterUserVo }> {
-    const data = await this.authService.register(register);
-    return { message: 'User registered successfully', data };
+    const user = await this.authService.register(register);
+    return { message: 'User registered successfully', data: user };
   }
 }
