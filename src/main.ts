@@ -10,7 +10,12 @@ async function bootstrap() {
   //   exclude: [''],
   // });
   // global validation pipe
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // remove properties that are not allowed in the DTO
+      forbidNonWhitelisted: true, // throw an error if there are properties that are not allowed in the DTO
+    }),
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }

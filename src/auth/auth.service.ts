@@ -1,10 +1,10 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterUserVo } from './vo/register-user.vo';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { hashPasswordHelper } from 'src/utils/helper';
 
 @Injectable()
 export class AuthService {
@@ -21,11 +21,11 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new ConflictException('Username or email already exists');
+      throw new BadRequestException('Username or email already exists');
     }
 
     // hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPasswordHelper(password);
 
     // create new user
     const newUser = this.userRepository.create({

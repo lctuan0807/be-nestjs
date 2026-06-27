@@ -10,6 +10,7 @@ export class AuthController {
   // register user endpoint -- auth/register
   @Post('register')
   async register(@Body() register: RegisterDto): Promise<{ message: string, data: RegisterUserVo }> {
+    console.log("🚀 ~ AuthController ~ register ~ register:", register)
     const user = await this.authService.register(register);
     return { message: 'User registered successfully', data: user };
   }
