@@ -61,26 +61,24 @@ export class AuthService {
       throw new InternalServerErrorException("An error occured while creating new user");
     }
   }
-  
-  async signIn(loginDto: LoginDto) {
-    const { username, password } = loginDto;
+
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.id };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  async validateUser(username: string, password: string) {
     const user = await this.usersService.findOneByUsername(username);
 
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
+    if (!user) return null;
 
     const isValidPassword = await comparePasswordHelper(password, user.password);
 
-    if (!isValidPassword) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    if (!isValidPassword) return null;
     
-    const payload = { username: user.username, sub: user.id };
-    const accessToken = this.jwtService.sign(payload);
-
-    console.log("🚀 ~ AuthService ~ signIn ~ accessToken:", accessToken)
-    
-    return { accessToken };
+    return user;
   }
 }
