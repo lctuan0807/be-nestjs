@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserVo } from './vo/register-user.vo';
 import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +19,21 @@ export class AuthController {
 
   // login endpoint - auth/login
   @Post('login')
-  async login(@Body() login: LoginDto): Promise<{ accessToken: string }> {
-    console.log("🚀 ~ AuthController ~ login ~ login:", login)
-    return this.authService.signIn(login);
+  @UseGuards(LocalAuthGuard)
+  // async login(@Body() login: LoginDto): Promise<{ accessToken: string }> {
+  //   console.log("🚀 ~ AuthController ~ login ~ login:", login)
+  //   return this.authService.signIn(login);
+  // }
+  login(@Request() req) {
+    console.log("🚀 ~ AuthController ~ login ~ req.user:", req.user)
+    return this.authService.login(req.user);
+  }
+
+  // auth/me
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getProfile(@Request() req) {
+    console.log("🚀 ~ AuthController ~ getProfile ~ req:", req.user)
+    return req.user;
   }
 }
