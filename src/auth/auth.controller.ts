@@ -10,8 +10,7 @@ import { EmailService } from 'src/email/email.service';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
-    private readonly emailService: EmailService
+    private readonly authService: AuthService
   ) {}
 
   // register user endpoint -- auth/register
@@ -38,13 +37,5 @@ export class AuthController {
   getProfile(@Request() req) {
     console.log("🚀 ~ AuthController ~ getProfile ~ req:", req.user)
     return req.user;
-  }
-
-
-  @Public()
-  @Get('mail')
-  async sendMail() {
-    await this.emailService.sendMail('lctuan.0807@gmail.com');
-    return 'Mail sent';
   }
 }

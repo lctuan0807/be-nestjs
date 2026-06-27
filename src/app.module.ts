@@ -46,11 +46,11 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.ad
         defaults: {
           from: configService.get('MAIL_FROM'),
         },
-        // template: {
-        //   dir: __dirname + '/templates',
-        //   adapter: new HandlebarsAdapter(),
-        //   options: { strict: true },
-        // },
+        template: {
+          dir: process.cwd() + '/src/mail/templates',
+          adapter: new HandlebarsAdapter(),
+          options: { strict: true },
+        },
       }),
     }),
   ],

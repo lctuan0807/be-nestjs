@@ -11,15 +11,19 @@ export class EmailService {
     this.logger = new Logger(EmailService.name);
   }
 
-  async sendMail(email: string): Promise<void> {
+  async sendVerificationEmail(email: string, username: string, otp: string): Promise<void> {
     this.logger.log("Attemping to send email")
     try {
       this.mailerService.sendMail({
         to: email,
         subject: 'Test',
-        text: 'Welcome',
-        html: "<b>Hello world!</b>"
-        // context: {}
+        // text: 'Welcome',
+        // html: "<b>Hello world!</b>",
+        template: 'register',
+        context: {
+          name: username,
+          activationCode: otp
+        }
       })
     } catch (error) {
       this.logger.log("Failed to send email", error)
