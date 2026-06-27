@@ -5,10 +5,14 @@ import { RegisterDto } from './dto/register.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from 'src/decorators/custom';
+import { EmailService } from 'src/email/email.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailService: EmailService
+  ) {}
 
   // register user endpoint -- auth/register
   @Post('register')
@@ -34,5 +38,13 @@ export class AuthController {
   getProfile(@Request() req) {
     console.log("🚀 ~ AuthController ~ getProfile ~ req:", req.user)
     return req.user;
+  }
+
+
+  @Public()
+  @Get('mail')
+  async sendMail() {
+    await this.emailService.sendMail('lctuan.0807@gmail.com');
+    return 'Mail sent';
   }
 }

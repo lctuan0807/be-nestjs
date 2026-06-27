@@ -21,3 +21,7 @@ Content-Type: application/json
 ### Auth -> Me
 GET http://localhost:3000/auth/me
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxjdHVhbi4wODA3Iiwic3ViIjoxLCJpYXQiOjE3ODI1NDg1MDMsImV4cCI6MTc4MjYzNDkwM30.Sq8ZOePGHslEnX1LK72vDnEmKN7McnjUjp_RNXkUjq8
+
+
+### Auth -> send email
+GET http://localhost:3000/auth/mail
