@@ -20,10 +20,6 @@ export class AuthController {
   // login endpoint - auth/login
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  // async login(@Body() login: LoginDto): Promise<{ accessToken: string }> {
-  //   console.log("🚀 ~ AuthController ~ login ~ login:", login)
-  //   return this.authService.signIn(login);
-  // }
   login(@Request() req) {
     console.log("🚀 ~ AuthController ~ login ~ req.user:", req.user)
     return this.authService.login(req.user);
