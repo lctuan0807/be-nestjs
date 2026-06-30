@@ -17,9 +17,6 @@ import { UserVo } from './vo/user.vo';
 
 @Injectable()
 export class AuthService {
-  @InjectRepository(User)
-  private userRepository: Repository<User>;
-
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
@@ -31,6 +28,10 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username, sub: user.id };
+    const userVo = new UserVo();
+    userVo.id = user.id;
+    userVo.username = user.username;
+    userVo.email = user.email;
 
     const userVo = new UserVo();
     userVo.id = user.id;

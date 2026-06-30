@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -10,6 +10,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { EmailService } from 'src/email/email.service';
+import { RedisModule } from 'src/redis/redis.module';
+import { RedisService } from 'src/redis/redis.service';
 
 const otpStorage: Record<string, { otp: string; otpExpiresAt: number }> = {};
 
@@ -17,6 +19,8 @@ const otpStorage: Record<string, { otp: string; otpExpiresAt: number }> = {};
 export class UsersService {
   @InjectRepository(User)
   private userRepository: Repository<User>;
+  @Inject(RedisService)
+  private readonly redisService: RedisService;
 
   constructor(private readonly emailService: EmailService) {}
 
@@ -69,8 +73,9 @@ export class UsersService {
 
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       console.log('🚀 ~ UsersService ~ handleRegister ~ otp:', otp);
-      const otpExpiresAt = Date.now() + 5 * 60 * 1000;
-      otpStorage[email] = { otp, otpExpiresAt }; // save this to redis
+      // const otpExpiresAt = Date.now() + 5 * 60 * 1000;
+      // otpStorage[username] = { otp, otpExpiresAt }; // save this to redis
+      await this.redisService.set(`otp:${username}`, otp, 5 * 60);
 
       // send email with OTP
       this.emailService.sendVerificationEmail(
